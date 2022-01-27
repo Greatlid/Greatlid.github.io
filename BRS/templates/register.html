@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>账户注册</title>
+
 	<style type="text/css">
 	body,input{
 		margin: 0;
@@ -40,7 +41,7 @@
 	}
 	.xiao-username-box{
 		position: absolute;
-		width: 420px;
+		width: 600px;
 		height: 40px;
 		line-height: 40px;
 		margin-top:100px;
@@ -60,7 +61,7 @@
 	}
 	.xiao-userPassword-box{
 		position: absolute;
-		width: 420px;
+		width: 600px;
 		height: 40px;
 		line-height: 40px;
 		margin-top:180px;
@@ -79,7 +80,7 @@
 	}
 	.xiao-userRePassword-box{
 		position: absolute;
-		width: 420px;
+		width: 600px;
 		height: 40px;
 		line-height: 40px;
 		margin-top:260px;
@@ -98,7 +99,7 @@
 	}
 	.xiao-userPhone-box{
 		position: absolute;
-		width: 420px;
+		width: 600px;
 		height: 40px;
 		line-height: 40px;
 		margin-top:340px;
@@ -117,7 +118,7 @@
 	}
 	.xiao-userEmail-box{
 		position: absolute;
-		width: 420px;
+		width: 600px;
 		height: 40px;
 		line-height: 40px;
 		margin-top:420px;
@@ -136,7 +137,7 @@
 	}
     .xiao-userMajor-box{
 		position: absolute;
-		width: 420px;
+		width: 600px;
 		height: 40px;
 		line-height: 40px;
 		margin-top:500px;
@@ -155,7 +156,7 @@
 	}
     .xiao-userGrade-box{
 		position: absolute;
-		width: 420px;
+		width: 600px;
 		height: 40px;
 		line-height: 40px;
 		margin-top:580px;
@@ -174,7 +175,7 @@
 	}
 	.xiao-userGender-box{
 		position: absolute;
-		width: 420px;
+		width: 600px;
 		height: 40px;
 		line-height: 40px;
 		margin-top:660px;
@@ -219,19 +220,34 @@
 
  <script type="text/javascript">
 	//onblur失去焦点事件，用户离开输入框时执行 JavaScript 代码：
-	//函数1：验证邮箱格式
-  	function validate_username(username){
-  		//定义正则表达式的变量:邮箱正则
-  		var emailReg=/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-  		//console.log(username);
-  		if(username !="")
-  		{
-  			document.getElementById("username").innerHTML = "<font color='green' size='3px'>√</font>";
-  		}else{
-  			document.getElementById("username").innerHTML = "<font color='red' size='3px'>用户名不能为空！</font>";
-            alert("用户名不能为空！");
-  		}
-  	}
+
+          //函数1：验证邮箱格式
+      function validate_username(username){
+        //定义正则表达式的变量:邮箱正则
+        var emailReg=/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+        //console.log(username);
+        if(username !="")
+        {
+            var httpRequest = new XMLHttpRequest();
+            httpRequest.open('POST', '/XJTU/checkUser/', true);
+            httpRequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            httpRequest.onload = function(e) {
+                if(this.status == 200||this.status == 304){
+                    if (this.responseText == '1'){
+                        document.getElementById("username_check").innerHTML = "<font color='red' size='3px'>该用户名已经注册过了哦</font>";
+                    }
+                    else {
+                        document.getElementById("username_check").innerHTML = "<font color='green' size='3px'>√</font>";
+                    }
+                }
+            }
+            httpRequest.send('username='+username);
+
+        }else{
+            document.getElementById("username_check").innerHTML = "<font color='red' size='3px'>用户名不能为空！</font>";
+        }
+
+    }
 
  	//函数2：验证密码是否符合要求：匹配6位密码，由数字和字母组成：
   	function validate_password(password){
@@ -240,10 +256,10 @@
   		var passwordReg=/^[a-z0-9]{6,18}$/;
   		if(password != "" && password.search(passwordReg) != -1)
   		{
-  			document.getElementById("userPassword").innerHTML = "<font color='green' size='3px'>√密码格式正确</font>";
+            document.getElementById("userPassword_check").innerHTML = "<font color='green' size='3px'>√</font>";
+
   		}else{
-  			document.getElementById("userPassword").innerHTML = "<font color='red' size='3px'>密码格式错误</font>";
-  			alert("密码格式错误!");
+  			document.getElementById("userPassword_check").innerHTML = "<font color='red' size='3px'>密码格式错误</font>";
   		}
   	}
 
@@ -253,13 +269,12 @@
   		//测试：console.log(password);
   		//测试：console.log(password2);
   		if (password == ""){
-			document.getElementById("userRePassword").innerHTML = "<font color='red' size='3px'>密码不为空</font>";
+			document.getElementById("userRePassword_check").innerHTML = "<font color='red' size='3px'>密码不为空</font>";
 		}else if(password==password2){
-  			document.getElementById("userRePassword").innerHTML = "<font color='green' size='3px'>√两次输入的密码相同</font>";
+  			document.getElementById("userRePassword_check").innerHTML = "<font color='green' size='3px'>√</font>";
   		}else{
-  			document.getElementById("userRePassword").innerHTML = "<font color='red' size='3px'>两次输入的密码不相同</font>";
+  			document.getElementById("userRePassword_check").innerHTML = "<font color='red' size='3px'>两次输入的密码不相同</font>";
   			//console.log("密码有6位，由数字和字母组成!");
-            alert("两次输入的密码不相同!");
   		}
   	}
 
@@ -297,6 +312,8 @@
   			return false;
   		}
   	}
+
+
   </script>
 
 
@@ -313,7 +330,7 @@
 					<div class="xiao-username-input">
 						<input type="text" id="username" name="username" placeholder="请输入用户名，如XJTUUP" onblur="validate_username(this.value)"/>
 					</div>
-                    <td id="username"></td>
+                    <span class="xiao-require" id="username_check"></span>
 				</div>
 
 
@@ -323,15 +340,16 @@
 					<div class="xiao-userPassword-input">
 						<input type="password" id="userPassword" name="password" placeholder="密码由字母或数字组成 长度:6-18个字符" onblur="validate_password(this.value)"/>
 					</div>
-                    <td id="userPassworddd"></td>
+                    <span class="xiao-require" id="userPassword_check"></span>
 				</div>
 
 				<div class="xiao-userRePassword-box">
-				<span class="xiao-require">*</span>
-						<label for="userRePassword">确认密码</label>
+				    <span class="xiao-require">*</span>
+                    <label for="userRePassword">确认密码</label>
 					<div class="xiao-userRePassword-input">
 						<input type="password" id="userRePassword" name="userRePassword" placeholder="请重复输入密码" onblur="validate_password2(this.value)"/>
 					</div>
+                    <span class="xiao-require" id="userRePassword_check"></span>
 				</div>
 
 				<div class="xiao-userPhone-box">
@@ -340,6 +358,7 @@
 					<div class="xiao-userPhone-input">
 						<input type="text" id="userPhone" name="userPhone" placeholder="请输入您的手机号码，11位有效数字" />
 					</div>
+                    <span class="xiao-require" id="userPhone_check"></span>
 				</div>
 
 				<div class="xiao-userEmail-box">
@@ -348,6 +367,7 @@
 					<div class="xiao-userEmail-input">
 						<input type="text" id="userEmail" name="userEmail" placeholder="请输入您的邮箱地址，如：123@qq.com" />
 					</div>
+                    <span class="xiao-require" id="userEmail_check"></span>
 				</div>
 
                 <div class="xiao-userMajor-box">
@@ -356,6 +376,7 @@
 					<div class="xiao-userMajor-input">
 						<input type="text" id="userMajor" name="userMajor" placeholder="请输入您的专业，如自动化" />
 					</div>
+                    <span class="xiao-require" id="userMajor_check"></span>
 				</div>
 
                 <div class="xiao-userGrade-box">
@@ -364,6 +385,7 @@
 					<div class="xiao-userGrade-input">
 						<input type="text" id="userGrade" name="userGrade" placeholder="请输入您的年级，如2019级" />
 					</div>
+                    <span class="xiao-require" id="userGrade_check"></span>
 				</div>
 
 				<div class="xiao-userGender-box">

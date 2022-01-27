@@ -1,6 +1,6 @@
 import requests
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from ..models import *
 
 def homepage(request):
@@ -25,6 +25,17 @@ def register(request):
         UserInfo.objects.create(username=username, password=password, userPhone=userPhone,
                                 userEmail=userEmail,userMajor=userMajor,userGrade=userGrade,userGender=userGender)
         return HttpResponseRedirect('/XJTU/homepage/')
+
+def checkUser(request):
+    if request.method == 'POST':
+        username = request.POST.get('username', None)
+        print(username)
+        info = UserInfo.objects.filter(username=username)
+        if info:
+            return HttpResponse('1')
+        else:
+            return HttpResponse('0')
+
 
 def login(request):
     if request.method == 'GET':
